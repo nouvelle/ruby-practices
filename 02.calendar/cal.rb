@@ -4,9 +4,9 @@ require 'optparse'
 Week = ["日", "月", "火", "水", "木", "金", "土"]
 
 # 今日の日付を取得
-day = Date.today
-showYear = day.year
-showMonth = day.month
+today = Date.today
+showYear = today.year
+showMonth = today.month
 
 # 引数を取得
 param = ARGV.getopts("m:", "y:")
@@ -22,12 +22,11 @@ if param["m"]
         showYear = year
       else
         # 戻す
-        showMonth = day.month
+        showMonth = today.month
       end 
     end 
   end 
 end
-
 
 ## 結果出力
 puts "      #{showMonth}月 #{showYear}"
@@ -36,19 +35,24 @@ puts Week.join(" ")
 # 表示月の日付データ取得
 isFirstDay = true
 lastDay = Date.new(showYear, showMonth, -1)
+
 (1..lastDay.day).each do |day|
+  showSpace = ""
   week = Date.new(showYear, showMonth, day).wday
-  day = day <= 9 ? " #{day}" : day
+  showDay = day <= 9 ? " #{day}" : day
+
   if isFirstDay
-    space = "   " * week
-    print "#{space}#{day}"
+    showSpace = "   " * week
     isFirstDay = false
   else
-    if week == 0
-      print day
-    else
-      print " #{day}"
-    end
+    showSpace = " " if week != 0
+  end
+
+  # 今日だったら色を反転させる
+  if showMonth == today.month && showYear == today.year && today.day == day
+    print "#{showSpace}\e[7m#{showDay}\e[0m"
+  else
+    print "#{showSpace}#{showDay}"
   end
 
   if week == 6
