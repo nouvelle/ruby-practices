@@ -1,12 +1,12 @@
 require 'date'
 require 'optparse'
 
-Week = ["日", "月", "火", "水", "木", "金", "土"]
+WEEK = ["日", "月", "火", "水", "木", "金", "土"]
 
 # 今日の日付を取得
 today = Date.today
-showYear = today.year
-showMonth = today.month
+show_year = today.year
+show_month = today.month
 
 # 引数を取得
 param = ARGV.getopts("m:", "y:")
@@ -14,48 +14,48 @@ param = ARGV.getopts("m:", "y:")
 # 表示する月を決める処理
 if param["m"]
   month = param["m"].to_i
-  if month >= 1 && month <= 12
-    showMonth = month
+  if month >= 1 && month <= 12  # if (1..12).include?(month) でもいける
+    show_month = month
     if param["y"]
       year = param["y"].to_i
       if year >= 1970 && year <= 2100
-        showYear = year
+        show_year = year
       else
         # 戻す
-        showMonth = today.month
+        show_month = today.month
       end 
     end 
   end 
 end
 
 ## 結果出力
-puts "      #{showMonth}月 #{showYear}"
-puts Week.join(" ")
+puts "      #{show_month}月 #{show_year}"
+puts WEEK.join(" ")
 
 # 表示月の日付データ取得
-isFirstDay = true
-lastDay = Date.new(showYear, showMonth, -1)
+is_first_day = true
+last_day = Date.new(show_year, show_month, -1)
 
-(1..lastDay.day).each do |day|
-  showSpace = ""
-  week = Date.new(showYear, showMonth, day).wday
-  showDay = day <= 9 ? " #{day}" : day
+(1..last_day.day).each do |day|
+  show_space = ""
+  week = Date.new(show_year, show_month, day).wday
+  show_day = day.to_s.rjust(2)
 
-  if isFirstDay
-    showSpace = "   " * week
-    isFirstDay = false
+  if is_first_day
+    show_space = "   " * week
+    is_first_day = false
   else
-    showSpace = " " if week != 0
+    show_space = " " if week != 0
   end
 
   # 今日だったら色を反転させる
-  if showMonth == today.month && showYear == today.year && today.day == day
-    print "#{showSpace}\e[7m#{showDay}\e[0m"
+  if Date.new(show_year, show_month, day) == today
+    print "#{show_space}\e[7m#{show_day}\e[0m"
   else
-    print "#{showSpace}#{showDay}"
+    print "#{show_space}#{show_day}"
   end
 
-  if week == 6
+  if Date.new(show_year, show_month, day).saturday?
     print "\n"
   end
 end
