@@ -20,14 +20,26 @@ def print_filenames(filenames_arr, max_length)
   puts filenames_arr.map { |name| name.ljust(max_length + 1) }.join
 end
 
-result = make_initial_arr(COLUMN_NUMBER)
+row_number = filenames.size / COLUMN_NUMBER
+row_number += 1 if filenames.size % COLUMN_NUMBER != 0
+result = make_initial_arr(row_number)
 
-filenames.each_with_index do |name, index|
-  remainder = index % COLUMN_NUMBER
-  max_length = name.size if max_length < name.size
-  result[remainder] << name
+amari = filenames.size % COLUMN_NUMBER
+
+(1..filenames.size).each_with_index do |order, index|
+  max_length = filenames[index].size if max_length < filenames[index].size
+  if amari > 0
+    remainder = index % row_number
+    result[remainder] << filenames[index]
+    amari -= 1 if remainder == row_number - 1
+  else
+    remainder = (index - (row_number * (filenames.size % COLUMN_NUMBER))) % (filenames.size / COLUMN_NUMBER)
+    result[remainder] << filenames[index]
+  end
 end
 
-print_filenames(result[0], max_length)
-print_filenames(result[1], max_length)
-print_filenames(result[2], max_length)
+n = 0
+while n < row_number
+  print_filenames(result[n], max_length)
+  n += 1
+end
