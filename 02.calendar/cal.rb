@@ -23,38 +23,29 @@ if param['m'] && param['y']
     show_year = year
   end
 elsif param['m'] && !param['y']
-  show_month = month if month >= 1 && month <= 12
+  show_month = month if (1..12).cover?(month)
 else
   show_month = today.month
 end
 
-## 結果出力
+## タイトル（年月・曜日）出力
 puts "      #{show_month}月 #{show_year}"
 puts WEEK.join(' ')
 
 # 表示月の日付データ取得
-is_first_day = true
 last_day = Date.new(show_year, show_month, -1)
 
+# 1日の左のスペースを表示
+week = Date.new(show_year, show_month, 1).wday
+print('   ' * week)
+
 (1..last_day.day).each do |day|
-  show_space = ''
-  week = Date.new(show_year, show_month, day).wday
+  target_day = Date.new(show_year, show_month, day)
+  week = target_day.wday
   show_day = day.to_s.rjust(2)
-
-  if is_first_day
-    show_space = '   ' * week
-    is_first_day = false
-  elsif week != 0
-    show_space = ' '
-  end
-
   # 今日だったら色を反転させる
-  if Date.new(show_year, show_month, day) == today
-    print "#{show_space}\e[7m#{show_day}\e[0m"
-  else
-    print "#{show_space}#{show_day}"
-  end
-
-  print "\n" if Date.new(show_year, show_month, day).saturday?
+  show_day = "\e[7m#{show_day}\e[0m" if target_day == today
+  print " #{show_day}"
+  print "\n" if target_day.saturday?
 end
 print "\n"
