@@ -26,9 +26,9 @@ result = make_initial_arr(row_number)
 
 amari = filenames.size % COLUMN_NUMBER
 
-(1..filenames.size).each_with_index do |order, index|
+(0..filenames.size - 1).each do |index|
   max_length = filenames[index].size if max_length < filenames[index].size
-  if amari > 0
+  if amari.positive?
     remainder = index % row_number
     result[remainder] << filenames[index]
     amari -= 1 if remainder == row_number - 1
