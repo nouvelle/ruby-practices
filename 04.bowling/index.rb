@@ -20,19 +20,17 @@ scores = []
 prev_frame = []
 score_arr.each do |score|
   prev_frame.push(score)
-  if prev_frame.size == 1 && score == 10
-    scores.push(prev_frame)
-    prev_frame = []
-  elsif prev_frame.size == 2
+  if score == 10 || prev_frame.size == 2
     scores.push(prev_frame)
     prev_frame = []
   end
 end
+scores.push(prev_frame) unless prev_frame.empty?
 
 # 最終フレームの場合の処理
 frame10 = scores[9..11].flatten
 scores = scores[0..8]
-scores.concat([frame10])
+scores.push(frame10)
 
 # 計算処理
 total = scores.each_with_index.sum do |frame, index|
