@@ -26,20 +26,11 @@ result = make_initial_arr(row_number)
 
 amari = filenames.size % COLUMN_NUMBER
 
-(0..filenames.size - 1).each do |index|
+filenames.each_with_index do |name, index|
   max_length = filenames[index].size if max_length < filenames[index].size
-  if amari.positive?
-    remainder = index % row_number
-    result[remainder] << filenames[index]
-    amari -= 1 if remainder == row_number - 1
-  else
-    remainder = (index - (row_number * (filenames.size % COLUMN_NUMBER))) % (filenames.size / COLUMN_NUMBER)
-    result[remainder] << filenames[index]
-  end
+  remainder = index % row_number
+  result[remainder] << name
+  amari -= 1 if amari.positive? && remainder == row_number - 1
 end
 
-n = 0
-while n < row_number
-  print_filenames(result[n], max_length)
-  n += 1
-end
+row_number.times { |n| print_filenames(result[n], max_length) }
