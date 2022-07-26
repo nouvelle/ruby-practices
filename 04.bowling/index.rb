@@ -7,13 +7,7 @@ args = ARGV[0]
 score_arr = args.split(',')
 
 # 文字列を数値に変換、'X' を 10 に変換
-score_arr.each_with_index do |score, index|
-  score_arr[index] = if score == 'X'
-                       10
-                     else
-                       score.to_i
-                     end
-end
+score_arr = score_arr.map { |score| score == 'X' ? 10 : score.to_i }
 
 # 2投球を1フレームとしてまとめる
 scores = []
