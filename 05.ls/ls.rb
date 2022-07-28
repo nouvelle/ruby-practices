@@ -11,7 +11,7 @@ filenames = all_filenames if ARGV.include?('-a')
 
 # ファイルデータ格納配列の初期値作成
 def make_initial_arr(num)
-  num.times.map { [] }
+  Array.new(num) { [] }
 end
 
 # ファイル名表示メソッド
