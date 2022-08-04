@@ -3,11 +3,9 @@
 # frozen_string_literal: true
 
 COLUMN_NUMBER = 3
-filenames = Dir.glob('*')
-all_filenames = Dir.glob('*', File::FNM_DOTMATCH)
+glob_flag = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
+filenames = Dir.glob('*', glob_flag)
 max_length = 0
-
-filenames = all_filenames if ARGV.include?('-a')
 
 # ファイルデータ格納配列の初期値作成
 def make_initial_arr(num)
