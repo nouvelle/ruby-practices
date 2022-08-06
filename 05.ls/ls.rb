@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-require 'etc'
-
 # frozen_string_literal: true
+
+require 'etc'
 
 COLUMN_NUMBER = 3
 glob_flag = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
@@ -10,24 +10,24 @@ filenames.sort!.reverse! if ARGV.include?('-r')
 max_length = 0
 
 FILE_TYPE = {
-  "01" => "p",
-  "02" => "c",
-  "04" => "d",
-  "06" => "b",
-  "10" => "-",
-  "12" => "l",
-  "14" => "s",
-}
+  '01' => 'p',
+  '02' => 'c',
+  '04' => 'd',
+  '06' => 'b',
+  '10' => '-',
+  '12' => 'l',
+  '14' => 's'
+}.freeze
 PERMISSION_TYPE = {
-  "0" => "---",
-  "1" => "--x",
-  "2" => "-w-",
-  "3" => "-wx",
-  "4" => "r--",
-  "5" => "r-x",
-  "6" => "rw-",
-  "7" => "rwx",
-}
+  '0' => '---',
+  '1' => '--x',
+  '2' => '-w-',
+  '3' => '-wx',
+  '4' => 'r--',
+  '5' => 'r-x',
+  '6' => 'rw-',
+  '7' => 'rwx'
+}.freeze
 
 if ARGV.include?('-l')
   size_max_length = 1
@@ -41,16 +41,16 @@ if ARGV.include?('-l')
 
   filenames.each do |name|
     fs = File::Stat.new(name)
-    mode = sprintf("%06d", fs.mode.to_s(8))
+    mode = format('%06d', fs.mode.to_s(8))
     permission = FILE_TYPE[mode[0, 2]]
     permission += PERMISSION_TYPE[mode[3]]
     permission += PERMISSION_TYPE[mode[4]]
-    permission += PERMISSION_TYPE[mode[5]] + "  "
-    permission += fs.nlink.to_s + " "
-    permission += Etc.getpwuid(fs.uid).name + "  "
-    permission += Etc.getgrgid(fs.gid).name + " "
-    permission += sprintf("% #{size_max_length + 1}d", fs.size.to_s) + " "
-    permission += fs.atime.strftime("%b %e %R") + " "
+    permission += "#{PERMISSION_TYPE[mode[5]]}  "
+    permission += "#{fs.nlink} "
+    permission += "#{Etc.getpwuid(fs.uid).name}  "
+    permission += "#{Etc.getgrgid(fs.gid).name} "
+    permission += "#{format("% #{size_max_length + 1}d", fs.size.to_s)} "
+    permission += "#{fs.atime.strftime('%b %e %R')} "
     permission += name
     puts permission
   end
