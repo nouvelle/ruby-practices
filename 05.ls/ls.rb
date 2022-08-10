@@ -50,7 +50,7 @@ if ARGV.include?('-l')
     permission += "#{Etc.getpwuid(fs.uid).name}  "
     permission += "#{Etc.getgrgid(fs.gid).name} "
     permission += "#{format("% #{size_max_length + 1}d", fs.size.to_s)} "
-    permission += "#{fs.atime.strftime('%b %e %R')} "
+    permission += "#{fs.mtime.strftime('%b %e %R')} "
     permission += name
     puts permission
   end
