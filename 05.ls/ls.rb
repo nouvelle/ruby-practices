@@ -5,7 +5,7 @@ require 'etc'
 
 COLUMN_NUMBER = 3
 glob_flag = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
-filenames = Dir.glob('*', glob_flag)
+filenames = Dir.glob('*', glob_flag).sort!
 filenames.sort!.reverse! if ARGV.include?('-r')
 max_length = 0
 
