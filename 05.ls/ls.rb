@@ -5,11 +5,13 @@ require 'etc'
 
 COLUMN_NUMBER = 3
 
-arg = ARGV[0]
-if arg[0] == '-'
-  is_a = arg.include?('a')
-  is_l = arg.include?('l')
-  is_r = arg.include?('r')
+if ARGV[0]
+  arg = ARGV[0]
+  if arg[0] == '-'
+    is_a = arg.include?('a')
+    is_l = arg.include?('l')
+    is_r = arg.include?('r')
+  end
 end
 
 glob_flag = ARGV.include?('-a') || is_a ? File::FNM_DOTMATCH : 0
