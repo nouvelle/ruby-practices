@@ -2,21 +2,14 @@
 # frozen_string_literal: true
 
 require 'etc'
+require 'optparse'
 
 COLUMN_NUMBER = 3
 
-if ARGV[0]
-  arg = ARGV[0]
-  if arg[0] == '-'
-    is_a = arg.include?('a')
-    is_l = arg.include?('l')
-    is_r = arg.include?('r')
-  end
-end
-
-glob_flag = ARGV.include?('-a') || is_a ? File::FNM_DOTMATCH : 0
+params = ARGV.getopts('alr')
+glob_flag = params['a'] ? File::FNM_DOTMATCH : 0
 filenames = Dir.glob('*', glob_flag).sort!
-filenames.sort!.reverse! if ARGV.include?('-r') || is_r
+filenames.sort!.reverse! if params['r']
 max_length = 0
 
 FILE_TYPE = {
@@ -39,7 +32,7 @@ PERMISSION_TYPE = {
   '7' => 'rwx'
 }.freeze
 
-if ARGV.include?('-l') || is_l
+if params['l']
   nlink_size_max_length = 1
   size_max_length = 1
   block_size = 0
