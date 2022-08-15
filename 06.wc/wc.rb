@@ -30,14 +30,36 @@ def handle_stdin(str)
 end
 
 # パラメータ指定
-def handle_param(filename, is_l, is_w, is_c, is_all)
-  strings = File.read(filename)
-  result = ''
-  result += format('% 8d', line_count(strings)) if is_l || is_all
-  result += format('% 8d', word_count(strings)) if is_w || is_all
-  result += format('% 8d', file_size(filename)) if is_c || is_all
-  result += " #{filename}"
-  puts result
+def handle_param(filenames, is_l, is_w, is_c, is_all)
+  total_l = 0
+  total_w = 0
+  total_c = 0
+  filenames.each do |filename|
+    strings = File.read(filename)
+    result = ''
+    if is_l || is_all
+      result += format('% 8d', line_count(strings))
+      total_l += line_count(strings)
+    end
+    if is_w || is_all
+      result += format('% 8d', word_count(strings))
+      total_w += word_count(strings)
+    end
+    if is_c || is_all
+      result += format('% 8d', file_size(filename))
+      total_c += file_size(filename)
+    end
+    result += " #{filename}"
+    puts result
+  end
+  if filenames.size != 1
+    total = ''
+    total += format('% 8d', total_l) if is_l || is_all
+    total += format('% 8d', total_w) if is_w || is_all
+    total += format('% 8d', total_c) if is_c || is_all
+    total += " total"
+    puts total
+  end
 end
 
 if args.size.zero?
@@ -52,10 +74,12 @@ else
       is_l = arg.include?('l')
       is_w = arg.include?('w')
       is_c = arg.include?('c')
+      filenames = args[1..-1]
+    else
+      filenames = args
     end
-    filename = args[1] if args[1]
   end
 
   is_all = true if !is_l && !is_w && !is_c
-  handle_param(filename, is_l, is_w, is_c, is_all)
+  handle_param(filenames, is_l, is_w, is_c, is_all)
 end
