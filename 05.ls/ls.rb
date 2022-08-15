@@ -2,11 +2,14 @@
 # frozen_string_literal: true
 
 require 'etc'
+require 'optparse'
 
 COLUMN_NUMBER = 3
-glob_flag = ARGV.include?('-a') ? File::FNM_DOTMATCH : 0
-filenames = Dir.glob('*', glob_flag)
-filenames.sort!.reverse! if ARGV.include?('-r')
+
+params = ARGV.getopts('alr')
+glob_flag = params['a'] ? File::FNM_DOTMATCH : 0
+filenames = Dir.glob('*', glob_flag).sort!
+filenames.sort!.reverse! if params['r']
 max_length = 0
 
 FILE_TYPE = {
@@ -29,12 +32,14 @@ PERMISSION_TYPE = {
   '7' => 'rwx'
 }.freeze
 
-if ARGV.include?('-l')
+if params['l']
+  nlink_size_max_length = 1
   size_max_length = 1
   block_size = 0
   filenames.each do |name|
     fs = File::Stat.new(name)
     block_size += fs.blocks
+    nlink_size_max_length = fs.nlink.to_s.size if fs.nlink.to_s.size > nlink_size_max_length
     size_max_length = fs.size.to_s.size if fs.size.to_s.size > size_max_length
   end
   puts "total #{block_size}"
@@ -45,8 +50,8 @@ if ARGV.include?('-l')
     permission = FILE_TYPE[mode[0, 2]]
     permission += PERMISSION_TYPE[mode[3]]
     permission += PERMISSION_TYPE[mode[4]]
-    permission += "#{PERMISSION_TYPE[mode[5]]}  "
-    permission += "#{fs.nlink} "
+    permission += "#{PERMISSION_TYPE[mode[5]]} "
+    permission += "#{format("% #{nlink_size_max_length + 1}d", fs.nlink)} "
     permission += "#{Etc.getpwuid(fs.uid).name}  "
     permission += "#{Etc.getgrgid(fs.gid).name} "
     permission += "#{format("% #{size_max_length + 1}d", fs.size.to_s)} "
