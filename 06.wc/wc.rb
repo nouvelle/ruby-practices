@@ -33,9 +33,9 @@ def file_size(file)
 end
 
 result = ''
-result += "#{format("% 8d", line_count(strings))}" if is_l
-result += "#{format("% 8d", word_count(strings))}" if is_w
-result += "#{format("% 8d", file_size(filename))}" if is_c
+result += format('% 8d', line_count(strings)) if is_l
+result += format('% 8d', word_count(strings)) if is_w
+result += format('% 8d', file_size(filename)) if is_c
 result += " #{filename}"
 
 puts result
