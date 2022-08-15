@@ -40,12 +40,12 @@ def handle_param(filename, is_l, is_w, is_c)
   puts result
 end
 
-if args.size == 0
+if args.size.zero?
   stdin = ARGF.gets('')
   handle_stdin(stdin)
 else
   filename = args[0]
-  
+
   if args[0]
     arg = args[0]
     if arg[0] == '-'
@@ -53,9 +53,7 @@ else
       is_w = arg.include?('w')
       is_c = arg.include?('c')
     end
-    if args[1]
-      filename = args[1]
-    end
+    filename = args[1] if args[1]
   end
 
   handle_param(filename, is_l, is_w, is_c)
