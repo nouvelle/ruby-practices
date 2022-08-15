@@ -30,12 +30,12 @@ def handle_stdin(str)
 end
 
 # パラメータ指定
-def handle_param(filename, is_l, is_w, is_c)
+def handle_param(filename, is_l, is_w, is_c, is_all)
   strings = File.read(filename)
   result = ''
-  result += format('% 8d', line_count(strings)) if is_l
-  result += format('% 8d', word_count(strings)) if is_w
-  result += format('% 8d', file_size(filename)) if is_c
+  result += format('% 8d', line_count(strings)) if is_l || is_all
+  result += format('% 8d', word_count(strings)) if is_w || is_all
+  result += format('% 8d', file_size(filename)) if is_c || is_all
   result += " #{filename}"
   puts result
 end
@@ -56,5 +56,6 @@ else
     filename = args[1] if args[1]
   end
 
-  handle_param(filename, is_l, is_w, is_c)
+  is_all = true if !is_l && !is_w && !is_c
+  handle_param(filename, is_l, is_w, is_c, is_all)
 end
