@@ -29,11 +29,6 @@ def calc_filename(filename, is_l, is_w, is_c, is_all)
   [l, w, c]
 end
 
-# 表示の整形
-def format_data(size, is_disp, is_all)
-  format('% 8d', size) if is_disp || is_all
-end
-
 # 標準入力
 def handle_stdin(str)
   result = ''
@@ -74,9 +69,9 @@ else
   return unless filenames.size != 1
 
   total = ''
-  total += format_data(total_l, is_l, is_all)
-  total += format_data(total_w, is_w, is_all)
-  total += format_data(total_c, is_c, is_all)
+  total += format('% 8d', total_l) if is_l || is_all
+  total += format('% 8d', total_w) if is_w || is_all
+  total += format('% 8d', total_c) if is_c || is_all
   total += ' total'
   puts total
 end
