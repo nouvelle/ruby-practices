@@ -30,35 +30,35 @@ def calc_filename(filename, is_l, is_w, is_c, is_all)
 end
 
 # 標準入力
-def handle_stdin(str)
+def handle_stdin(str, is_l, is_w, is_c, is_all)
   result = ''
-  result += format('% 8d', line_count(str))
-  result += format('% 8d', word_count(str))
-  result += format('% 8d', str.size)
+  result += format('% 8d', line_count(str)) if is_l || is_all
+  result += format('% 8d', word_count(str)) if is_w || is_all
+  result += format('% 8d', str.size) if is_c || is_all
   puts result
 end
 
-if args.size.zero?
-  stdin = ARGF.gets('')
-  handle_stdin(stdin)
-else
-  if args[0]
-    arg = args[0]
-    if arg[0] == '-'
-      is_l = arg.include?('l')
-      is_w = arg.include?('w')
-      is_c = arg.include?('c')
-      filenames = args[1..]
-    else
-      filenames = args
-    end
+if args[0]
+  arg = args[0]
+  if arg[0] == '-'
+    is_l = arg.include?('l')
+    is_w = arg.include?('w')
+    is_c = arg.include?('c')
+    filenames = args[1..]
+  else
+    filenames = args
   end
+end
 
-  is_all = true if !is_l && !is_w && !is_c
-  total_l = 0
-  total_w = 0
-  total_c = 0
+is_all = true if !is_l && !is_w && !is_c
+total_l = 0
+total_w = 0
+total_c = 0
 
+if File.pipe?($stdin)
+  stdin = $stdin.gets('')
+  handle_stdin(stdin, is_l, is_w, is_c, is_all)
+else
   filenames.each do |filename|
     l, w, c = calc_filename(filename, is_l, is_w, is_c, is_all)
     total_l += l.to_i
