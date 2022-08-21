@@ -20,24 +20,18 @@ def file_size(file)
   fs.size
 end
 
-def calc_filenames(filenames, is_l, is_w, is_c, is_all)
-  total_l = 0
-  total_w = 0
-  total_c = 0
-  filenames.each do |filename|
-    strings = File.read(filename)
-    result = ''
-    result += format('% 8d', line_count(strings)) if is_l || is_all
-    result += format('% 8d', word_count(strings)) if is_w || is_all
-    result += format('% 8d', file_size(filename)) if is_c || is_all
-    result += " #{filename}"
-    puts result
+# ファイルの計算
+def calc_filename(filename, is_l, is_w, is_c, is_all)
+  strings = File.read(filename)
+  l = format('% 8d', line_count(strings)) if is_l || is_all
+  w = format('% 8d', word_count(strings)) if is_w || is_all
+  c = format('% 8d', file_size(filename)) if is_c || is_all
+  [l, w, c]
+end
 
-    total_l += line_count(strings)
-    total_w += word_count(strings)
-    total_c += file_size(filename)
-  end
-  [total_l, total_w, total_c]
+# 表示の整形
+def format_data(size, is_disp, is_all)
+  format('% 8d', size) if is_disp || is_all
 end
 
 # 標準入力
@@ -47,19 +41,6 @@ def handle_stdin(str)
   result += format('% 8d', word_count(str))
   result += format('% 8d', str.size)
   puts result
-end
-
-# パラメータ指定
-def handle_param(filenames, is_l, is_w, is_c, is_all)
-  total_l, total_w, total_c = calc_filenames(filenames, is_l, is_w, is_c, is_all)
-  return unless filenames.size != 1
-
-  total = ''
-  total += format('% 8d', total_l) if is_l || is_all
-  total += format('% 8d', total_w) if is_w || is_all
-  total += format('% 8d', total_c) if is_c || is_all
-  total += ' total'
-  puts total
 end
 
 if args.size.zero?
@@ -79,5 +60,23 @@ else
   end
 
   is_all = true if !is_l && !is_w && !is_c
-  handle_param(filenames, is_l, is_w, is_c, is_all)
+  total_l = 0
+  total_w = 0
+  total_c = 0
+
+  filenames.each do |filename|
+    l, w, c = calc_filename(filename, is_l, is_w, is_c, is_all)
+    total_l += l.to_i
+    total_w += w.to_i
+    total_c += c.to_i
+    puts "#{l}#{w}#{c} #{filename}"
+  end
+  return unless filenames.size != 1
+
+  total = ''
+  total += format_data(total_l, is_l, is_all)
+  total += format_data(total_w, is_w, is_all)
+  total += format_data(total_c, is_c, is_all)
+  total += ' total'
+  puts total
 end
