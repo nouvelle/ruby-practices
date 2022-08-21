@@ -22,9 +22,9 @@ end
 
 # ファイルの計算
 def calc_filename(filename, is_l, is_w, is_c, is_all)
-  strings = File.read(filename)
-  l = format('% 8d', line_count(strings)) if is_l || is_all
-  w = format('% 8d', word_count(strings)) if is_w || is_all
+  text_of_file = File.read(filename)
+  l = format('% 8d', line_count(text_of_file)) if is_l || is_all
+  w = format('% 8d', word_count(text_of_file)) if is_w || is_all
   c = format('% 8d', file_size(filename)) if is_c || is_all
   [l, w, c]
 end
