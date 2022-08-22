@@ -4,13 +4,13 @@
 args = ARGV
 
 # 行数
-def line_count(str)
-  str.count("\n")
+def line_count(string)
+  string.count("\n")
 end
 
 # 単語数
-def word_count(str)
-  arr = str.split(/\s+/)
+def word_count(string)
+  arr = string.split(/\s+/)
   arr.size
 end
 
@@ -22,19 +22,19 @@ end
 
 # ファイルの計算
 def calc_filename(filename, is_l, is_w, is_c, is_all)
-  text_of_file = File.read(filename)
-  l = format('% 8d', line_count(text_of_file)) if is_l || is_all
-  w = format('% 8d', word_count(text_of_file)) if is_w || is_all
+  string_of_file = File.read(filename)
+  l = format('% 8d', line_count(string_of_file)) if is_l || is_all
+  w = format('% 8d', word_count(string_of_file)) if is_w || is_all
   c = format('% 8d', file_size(filename)) if is_c || is_all
   [l, w, c]
 end
 
 # 標準入力
-def handle_stdin(str, is_l, is_w, is_c, is_all)
+def handle_stdin(string, is_l, is_w, is_c, is_all)
   result = ''
-  result += format('% 8d', line_count(str)) if is_l || is_all
-  result += format('% 8d', word_count(str)) if is_w || is_all
-  result += format('% 8d', str.size) if is_c || is_all
+  result += format('% 8d', line_count(string)) if is_l || is_all
+  result += format('% 8d', word_count(string)) if is_w || is_all
+  result += format('% 8d', string.size) if is_c || is_all
   puts result
 end
 
