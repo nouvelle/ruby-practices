@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
+params = ARGV.getopts('lwc')
 args = ARGV
 
 # 行数
@@ -27,17 +30,10 @@ def calc_string(string, is_l, is_w, is_c, is_all)
   [lines_part, words_part, bytes_part]
 end
 
-if args[0]
-  arg = args[0]
-  if arg[0] == '-'
-    is_l = arg.include?('l')
-    is_w = arg.include?('w')
-    is_c = arg.include?('c')
-    filenames = args[1..]
-  else
-    filenames = args
-  end
-end
+is_l = params['l']
+is_w = params['w']
+is_c = params['c']
+filenames = args if args.size.nonzero?
 
 is_all = true if !is_l && !is_w && !is_c
 total_l = 0
