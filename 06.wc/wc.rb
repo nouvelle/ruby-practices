@@ -15,27 +15,16 @@ def word_count(string)
 end
 
 # ファイルサイズ
-def file_size(file)
-  fs = File::Stat.new(file)
-  fs.size
+def file_size(string)
+  string.size
 end
 
-# ファイルの計算
-def calc_filename(filename, is_l, is_w, is_c, is_all)
-  string_of_file = File.read(filename)
-  l = format('% 8d', line_count(string_of_file)) if is_l || is_all
-  w = format('% 8d', word_count(string_of_file)) if is_w || is_all
-  c = format('% 8d', file_size(filename)) if is_c || is_all
+# 渡された文字列の計算
+def calc_string(string, is_l, is_w, is_c, is_all)
+  l = format('% 8d', line_count(string)) if is_l || is_all
+  w = format('% 8d', word_count(string)) if is_w || is_all
+  c = format('% 8d', file_size(string)) if is_c || is_all
   [l, w, c]
-end
-
-# 標準入力
-def handle_stdin(string, is_l, is_w, is_c, is_all)
-  result = ''
-  result += format('% 8d', line_count(string)) if is_l || is_all
-  result += format('% 8d', word_count(string)) if is_w || is_all
-  result += format('% 8d', string.size) if is_c || is_all
-  puts result
 end
 
 if args[0]
@@ -57,10 +46,12 @@ total_c = 0
 
 if File.pipe?($stdin)
   stdin = $stdin.gets('')
-  handle_stdin(stdin, is_l, is_w, is_c, is_all)
+  l, w, c = calc_string(stdin, is_l, is_w, is_c, is_all)
+  puts "#{l}#{w}#{c}"
 else
   filenames.each do |filename|
-    l, w, c = calc_filename(filename, is_l, is_w, is_c, is_all)
+    string_of_file = File.read(filename)
+    l, w, c = calc_string(string_of_file, is_l, is_w, is_c, is_all)
     total_l += l.to_i
     total_w += w.to_i
     total_c += c.to_i
