@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require '../Game'
+require '../game'
 
 class GameTest < Minitest::Test
   def test_game
