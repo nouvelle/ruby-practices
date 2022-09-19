@@ -8,13 +8,13 @@ class Game
   end
 
   def calc_score
-    split_frame.each_with_index.sum do |f, i|
-      frame_sum = f.sum_score
+    split_frame.each_with_index.sum do |frame, i|
+      frame_sum = frame.sum_score
       next_frame = split_frame[i + 1]
 
       if i >= 9 || frame_sum < 10
         frame_sum
-      elsif f.strike?
+      elsif frame.strike?
         next_score = next_frame.first_shot.score
         next_next_score = next_frame.strike? ? split_frame[i + 2].first_shot.score : next_frame.second_shot.score
         10 + next_score + next_next_score
